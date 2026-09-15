@@ -20,6 +20,20 @@ MyPawntest >> testMovesBlackPawn [
 ]
 
 { #category : 'tests' }
+MyPawntest >> testMovesToTwoCasesWhitePawn [
+	| pawn squares board |
+	board := MyChessBoard empty.
+	board at: 'e2' put: (pawn := MyPawn white).
+
+	squares := pawn targetSquares.
+
+	self
+		assertCollection: squares
+		includesAll: (#('e3' 'e4') collect: [ :name | board at: name ]).
+	self assert: squares size equals: 2.
+]
+
+{ #category : 'tests' }
 MyPawntest >> testMovesWhitePawn [
 	| pawn squares board |
 	board := MyChessBoard empty.
