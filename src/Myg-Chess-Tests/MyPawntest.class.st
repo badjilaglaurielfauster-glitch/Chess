@@ -15,7 +15,9 @@ MyPawntest >> testCantMoveForwardInFrontOfBlackPawnAsWhitePawn [
 	
 	square := p1 targetSquares .
 	self
-		deny: (square includes: (board at: 'e5'))
+		deny: (square includes: (board at: 'e5')).
+	self deny: (square includes: (board at: 'e6')).
+		
 ]
 
 { #category : 'tests' }
