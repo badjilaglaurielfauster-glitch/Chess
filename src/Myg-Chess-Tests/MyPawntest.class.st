@@ -34,6 +34,32 @@ MyPawntest >> testCantMoveForwardInFrontOfBlackPawnAsWhitePawn [
 ]
 
 { #category : 'tests' }
+MyPawntest >> testCaptureLeft [
+
+	| pawn squares board |
+	board := MyChessBoard empty.
+	board at: 'e4' put: (pawn := MyPawn white).
+	board at: 'd5' put: MyPawn black.
+
+	squares := pawn targetSquares.
+
+	self assert: (squares includes: (board at: 'd5')).
+]
+
+{ #category : 'tests' }
+MyPawntest >> testCaptureRight [
+
+	| pawn squares board |
+	board := MyChessBoard empty.
+	board at: 'e4' put: (pawn := MyPawn white).
+	board at: 'f5' put: MyPawn black.
+
+	squares := pawn targetSquares.
+
+	self assert: (squares includes: (board at: 'f5')).
+]
+
+{ #category : 'tests' }
 MyPawntest >> testMovesBlackPawn [
 
 | pawn squares board |
