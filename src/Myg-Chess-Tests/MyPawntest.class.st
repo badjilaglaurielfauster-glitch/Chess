@@ -6,16 +6,27 @@ Class {
 }
 
 { #category : 'tests' }
-MyPawntest >> testCannotMoveDiagonallyToEmptySquare [
+MyPawntest >> testCannotMoveDiagonallyToEmptySquareLeft [
 
-	| pawn squares board |
-	board := MyChessBoard empty.
-	board at: 'e4' put: (pawn := MyPawn white).
+    | pawn squares board |
+    board := MyChessBoard empty.
+    board at: 'e4' put: (pawn := MyPawn white).
 
-	squares := pawn targetSquares.
+    squares := pawn targetSquares.
 
-	self deny: (squares includes: (board at: 'd5')).
-	self deny: (squares includes: (board at: 'f5')).
+    self deny: (squares includes: (board at: 'd5')).
+]
+
+{ #category : 'tests' }
+MyPawntest >> testCannotMovelackDiagonallyToEmptySquareRight [
+
+    | pawn squares board |
+    board := MyChessBoard empty.
+    board at: 'e4' put: (pawn := MyPawn white).
+
+    squares := pawn targetSquares.
+
+    self deny: (squares includes: (board at: 'f5')).
 ]
 
 { #category : 'tests' }
