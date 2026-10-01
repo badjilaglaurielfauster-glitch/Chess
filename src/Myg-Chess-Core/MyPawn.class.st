@@ -69,20 +69,25 @@ MyPawn >> secondForwardSquare [
 { #category : 'rendering' }
 MyPawn >> targetSquaresLegal: aBoolean [
 
-    | nextSquare secondSquare |
+    | nextSquare secondSquare forwardSquares captureSquares |
+
+    forwardSquares := #().
 
     nextSquare := self forwardSquare.
 
     (self canMoveForwardTo: nextSquare)
-        ifFalse: [ ^ #() ].
+        ifTrue: [
+            forwardSquares := { nextSquare }.
 
-    (self canMoveTwoSquares)
-        ifFalse: [ ^ { nextSquare } ].
+            (self canMoveTwoSquares)
+                ifTrue: [
+                    secondSquare := self secondForwardSquare.
 
-    secondSquare := self secondForwardSquare.
+                    (self canMoveForwardTo: secondSquare)
+                        ifTrue: [
+                            forwardSquares := { nextSquare. secondSquare } ] ] ].
 
-    (self canMoveForwardTo: secondSquare)
-        ifTrue: [ ^ { nextSquare. secondSquare } ].
+    captureSquares := self captureDiagonalSquares .
 
-    ^ { nextSquare }
+    ^ forwardSquares , captureSquares
 ]
