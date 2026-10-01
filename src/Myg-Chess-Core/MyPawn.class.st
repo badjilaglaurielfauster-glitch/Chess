@@ -5,6 +5,47 @@ Class {
 	#package : 'Myg-Chess-Core'
 }
 
+{ #category : 'testing' }
+MyPawn >> canMoveForwardTo: aSquare [
+
+    ^ aSquare notNil and: [ aSquare hasPiece not ]
+]
+
+{ #category : 'testing' }
+MyPawn >> canMoveTwoSquares [
+
+    ^ self isWhite
+        ifTrue: [ self square file = $2 ]
+        ifFalse: [ self square file = $7 ]
+]
+
+{ #category : 'as yet unclassified' }
+MyPawn >> captureDiagonalSquares [
+
+    | left right |
+
+    left := self isWhite
+        ifTrue: [ self square up left ]
+        ifFalse: [ self square down left ].
+
+    right := self isWhite
+        ifTrue: [ self square up right ]
+        ifFalse: [ self square down right ].
+
+    ^ { left. right } select: [ :s |
+        s notNil and: [
+            s hasPiece and: [
+                s contents color ~= self color ] ] ]
+]
+
+{ #category : 'as yet unclassified' }
+MyPawn >> forwardSquare [
+
+    ^ self isWhite
+        ifTrue: [ self square up ]
+        ifFalse: [ self square down ]
+]
+
 { #category : 'accessing' }
 MyPawn >> id [
 
@@ -17,29 +58,31 @@ MyPawn >> renderPieceOn: aSquare [
 	^ aSquare renderPawn: self
 ]
 
+{ #category : 'as yet unclassified' }
+MyPawn >> secondForwardSquare [
+
+    ^ self isWhite
+        ifTrue: [ self forwardSquare up ]
+        ifFalse: [ self forwardSquare down ]
+]
+
 { #category : 'rendering' }
 MyPawn >> targetSquaresLegal: aBoolean [
 
     | nextSquare secondSquare |
 
-    nextSquare := self isWhite
-        ifTrue: [ self square up ]
-        ifFalse: [ self square down ].
+    nextSquare := self forwardSquare.
 
-    "Sécurité : si on est sur la dernière rangée ou hors plateau"
-    (nextSquare isNil or: [ nextSquare hasPiece ]) ifTrue: [ ^ #() ].
+    (self canMoveForwardTo: nextSquare)
+        ifFalse: [ ^ #() ].
 
-    "Vérifie si le pion est sur sa rangée de départ ($2 pour les blancs, $7 pour les noirs)"
-    ((self isWhite and: [ self square file = $2 ])
-        or: [ self isWhite not and: [ self square file = $7 ] ])
-        ifTrue: [
-            secondSquare := self isWhite
-                ifTrue: [ nextSquare up ]
-                ifFalse: [ nextSquare down ].
+    (self canMoveTwoSquares)
+        ifFalse: [ ^ { nextSquare } ].
 
-            (secondSquare notNil and: [ secondSquare hasPiece not ]) ifTrue: [
-                ^ { nextSquare. secondSquare } ] ].
+    secondSquare := self secondForwardSquare.
 
-    "Déplacement simple d'une seule case"
+    (self canMoveForwardTo: secondSquare)
+        ifTrue: [ ^ { nextSquare. secondSquare } ].
+
     ^ { nextSquare }
 ]
